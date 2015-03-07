@@ -1,3 +1,4 @@
 pip==1.4
 django==1.6.5
-South
+south==1.0.1
+django-grappelli==2.5.6

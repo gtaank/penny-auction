@@ -1,9 +1,11 @@
+from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django.utils.text import slugify
 
 __author__ = 'verdan'
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
+
+User = get_user_model()
 
 
 class Category(models.Model):
@@ -22,17 +24,18 @@ class Category(models.Model):
         super(Category, self).__init__(*args, **kwargs)
 
 
-class AuctionItem(models.Model):
-
+class Item(models.Model):
     belongs_to = models.ForeignKey('auctions.Category', related_name='auctions')
     added_by = models.ForeignKey('users.User', related_name='auctions')
 
     title = models.CharField(max_length=255, default='')
     description = models.TextField(blank=True, null=True)
-    image = models.ImageField(upload_to='item/images')
+    # image = models.ImageField(upload_to='item/images')
     is_active = models.BooleanField(default=True)
 
-    condition = models.CharField(choices=(('new', 'Brand New'), ('used', 'Slightly Used'), ('old', 'Very Old')))
+    condition = models.CharField(max_length=5,
+                                 choices=(('new', 'Brand New'), ('used', 'Slightly Used'), ('old', 'Very Old')),
+                                 default='new')
     number_of_pieces = models.PositiveIntegerField(default=1)
 
     base_price = models.FloatField(default=0.01)
@@ -44,8 +47,8 @@ class AuctionItem(models.Model):
 
 
 class Bid(models.Model):
-    made_by = models.ForeignKey('users.User', related_name='bids')
-    made_against = models.ForeignKey('auctions.AuctionItem', related_name='bids')
+    made_by = models.ForeignKey(User, related_name='bids')
+    made_against = models.ForeignKey('auctions.Item', related_name='bids')
     made_on = models.DateTimeField(auto_now_add=True)
 
     bid_price = models.FloatField()

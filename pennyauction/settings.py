@@ -10,6 +10,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
@@ -30,15 +31,19 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = (
+    'grappelli',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'south',
     'web',
     'web.users',
     'web.auctions',
+    'monitor',
+    'monitor.users',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -53,6 +58,11 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'web.urls'
 
 WSGI_APPLICATION = 'pennyauction.wsgi.application'
+AUTH_USER_MODEL = 'users.User'
+AUTHENTICATION_BACKENDS = (
+    'pennyauction.libs.backends.EmailAuthBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
 
 
 # Database
@@ -85,5 +95,5 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 TEMPLATE_DIRS = (
-    os.path.join(BASE_DIR,  'web/templates'),
+    os.path.join(BASE_DIR, 'web/templates'),
 )

@@ -65,9 +65,6 @@ class User(AbstractBaseUser, PermissionsMixin):
                                        help_text=_('Designates when the user joined the SpotsTrek.'))
 
     lives_at = models.OneToOneField('Address', on_delete=models.SET_NULL, blank=True, null=True)
-    phone_number = models.CharField(max_length=10, default='', blank=True, null=True)
-    marked_inactive_because = models.CharField(max_length=255, default='', blank=True, null=True)
-    marked_inactive_at = models.DateTimeField(null=True, blank=True, default=None)
 
     # -----------------------# Start Django-required Methods #-----------------------#
     def __unicode__(self):
