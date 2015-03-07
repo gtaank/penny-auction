@@ -1,0 +1,69 @@
+{% extends 'web/base.html' %}
+{% block page-title %}Item Detail - Bidding Page{% endblock %}
+
+{% block content %}
+    <div class="row">
+
+        {% if success %}
+            <div class="col-md-4 col-md-offset-4">
+                <div class="alert alert-success" role="alert">Wohooo! Successfully made a bid on {{ item.title }}</div>
+            </div>
+        {% endif %}
+
+
+        {% if item %}
+            <div class="col-md-4 col-md-offset-4">
+
+                <div class="thumbnail">
+                    <img src="{{ STATIC_URL }}web/placeholder.png" alt="This is just a placeholder">
+
+                    <div class="caption">
+                        {% if not item.is_active %}<h4>EXPIRED</h4>{% endif %}
+                        <h4>{{ item.title }}</h4>
+
+                        <p class="small"><strong>Category:</strong> {{ item.belongs_to.title }}</p>
+
+                    {% if item.is_active %}
+                        {% if item.auction_end_period %}
+                            <p class="small"><strong>Auction Ends at:</strong> {{ item.auction_end_period }}</p>
+                        {% else %}
+                            <p class="small"><strong>Auction Ends at:</strong> Not Defined</p>
+                        {% endif %}
+
+                        {% if item.latest_bid %}
+                            <strong><p class="small">Last Bid: {{ item.latest_bid.bid_price }} BTC</p></strong>
+                        {% else %}
+                            <strong><p class="small">Hurry! No Bid yet!</p></strong>
+                        {% endif %}
+
+                        {% include 'web/_base_form.html' with form=form submit_button_text='Bid Now !' %}
+                    {% else %}
+                        <p class="small">This Item has been awarded to {{ item.winner.made_by.first_name }}</p>
+                        <p>Awarded on {{ item.winner.awarded_on }}</p>
+                        <p><strong>On Price {{ item.winner.bid_price }} BTC</strong></p>
+                    {% endif %}
+                    </div>
+                </div>
+
+                {% if item.bids %}
+                    <h3>Previous Bids</h3>
+                    {% for bid in item.bids %}
+                        <h5>Bid Made By : {{ bid.made_by.first_name }} of Price : <strong>{{ bid.bid_price }}
+                            BTC</strong> on {{ bid.made_on }}</h5>
+                    {% endfor %}
+                {% endif %}
+                <br>
+                <br>
+                <a class="btn btn-primary" href="{% url 'dashboard_page' %}" role="button">Go Back to Dashboard</a>
+                <br>
+                <br>
+
+
+            </div>
+        {% else %}
+            <a class="btn btn-primary" href="{% url 'dashboard_page' %}" role="button">Oops! looks like a mistake in
+                URL, Go Back to Dashboard</a>
+        {% endif %}
+    </div>
+
+{% endblock %}

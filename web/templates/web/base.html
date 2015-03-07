@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <title>Penny Auction Site</title>
+</head>
+<body>
+<div class="container-fluid text-center">
+    <div class="jumbotron">
+        <p>[Penny Bidding Auction Prototype]</p>
+        <small>{% block page-title %}{% endblock %}</small>
+    </div>
+    <div class="text-right">
+        {% if request.user.is_authenticated %}
+            <a class="btn btn-primary" href="{% url 'logout_page' %}" role="button">Hi {{ request.user.first_name }}! Logout here</a>
+        {% else %}
+            <a class="btn btn-primary" href="{% url 'login_page' %}" role="button">Login</a>
+        {% endif %}
+    </div>
+
+    {% block content %}
+    {% endblock %}
+</div>
+</body>
+{% block javascript %}
+{% endblock %}
+</html>

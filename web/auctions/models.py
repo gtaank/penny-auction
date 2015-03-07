@@ -12,6 +12,9 @@ class Category(models.Model):
     slug = models.SlugField(unique=True)
     title = models.CharField(max_length=255, default='')
 
+    def __str__(self):
+        return self.slug
+
     @staticmethod
     def _slugify_by_default(kwargs):
         slug = kwargs.get('slug')
@@ -45,6 +48,19 @@ class Item(models.Model):
     auction_start_period = models.DateTimeField(default=timezone.now)
     auction_end_period = models.DateTimeField(blank=True, null=True)
 
+    def __str__(self):
+        return "%s | %s, by : %s" % (self.belongs_to, self.title, self.added_by)
+
+    @staticmethod
+    def get_list_of_all_items():
+        return Item.objects.all().order_by('auction_end_period')
+
+    @staticmethod
+    def get_item(item_code):
+        item = Item.objects.filter(id=item_code)
+        if item:
+            return item[0]
+
 
 class Bid(models.Model):
     made_by = models.ForeignKey(User, related_name='bids')
@@ -54,4 +70,10 @@ class Bid(models.Model):
     bid_price = models.FloatField()
 
     is_a_winner = models.BooleanField(default=False)
-    awarded_on = models.DateTimeField()
+    awarded_on = models.DateTimeField(blank=True, null=True)
+
+    @staticmethod
+    def add_new_bid(made_by, made_against, bid_price):
+        bid = Bid(made_by=made_by, made_against=made_against, bid_price=bid_price)
+        bid.save()
+        return bid
