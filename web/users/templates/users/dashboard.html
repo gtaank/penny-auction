@@ -19,33 +19,50 @@
                             <p class="small"><strong>Category:</strong> {{ item.belongs_to.title }}</p>
 
 
-                        {% if item.is_active %}
-                            {% if item.auction_end_period %}
-                                <p class="small"><strong>Auction Ends at:</strong> {{ item.auction_end_period }}</p>
-                            {% else %}
-                                <p class="small"><strong>Auction Ends at:</strong> Not Defined</p>
-                            {% endif %}
+                            {% if not item.auction_ended %}
 
-                            {% if item.latest_bid %}
-                                <strong><p class="small">Last Bid: {{ item.latest_bid.bid_price }} BTC</p></strong>
-                            {% else %}
-                                <strong><p class="small">Hurry! No Bid yet!</p></strong>
-                            {% endif %}
-
-                            <p>
-                                {% if request.user.is_authenticated %}
-                                    <a href="{% url 'item_detail_page' item_code=item.id %}" class="btn btn-primary" role="button">Bid Now !</a>
+                                {% if item.auction_end_period %}
+                                    <p class="small"><strong>Auction Ends at:</strong> {{ item.auction_end_period }}</p>
                                 {% else %}
-                                    <a href="{% url 'login_page' %}" class="btn btn-primary" role="button">Bid Now !</a>
+                                    <p class="small"><strong>Auction Ends at:</strong> Not Defined</p>
                                 {% endif %}
 
-                            </p>
-                        {% else %}
-                            <p class="small">This Item has been awarded to {{ item.winner.made_by.first_name }}</p>
-                            <p class="small">Awarded on {{ item.winner.awarded_on }}</p>
-                            <p class="small"><strong>On Price {{ item.winner.bid_price }} BTC</strong></p>
-                            <a href="{% url 'item_detail_page' item_code=item.id %}" class="btn btn-primary" role="button">View Details</a>
-                        {% endif %}
+                                {% if item.latest_bid %}
+                                    <strong><p class="small">Last Bid: {{ item.latest_bid.bid_price }} BTC</p></strong>
+                                {% else %}
+                                    <strong><p class="small">Hurry! No Bid yet!</p></strong>
+                                {% endif %}
+
+                                <p>
+                                    {% if request.user.is_authenticated %}
+                                        <a href="{% url 'item_detail_page' item_code=item.id %}" class="btn btn-primary"
+                                           role="button">Bid Now !</a>
+                                    {% else %}
+                                        <a href="{% url 'login_page' %}" class="btn btn-primary" role="button">Bid Now
+                                            !</a>
+                                    {% endif %}
+
+                                </p>
+
+                            {% else %}
+                                <p><strong>EXPIRED</strong></p>
+                                {% if item.bids %}
+                                    {% if item.winner %}
+                                        <p class="small">This Item has been awarded
+                                            to {{ item.winner.made_by.first_name }}</p>
+                                        <p>Awarded on {{ item.winner.awarded_on }}</p>
+                                        <p><strong>On Price {{ item.winner.bid_price }} BTC</strong></p>
+                                    {% else %}
+                                        <p><strong>Winners are being processed. It may take few minutes to award the
+                                            bid, stay tuned!</strong></p>
+                                    {% endif %}
+                                {% else %}
+                                    <p><strong>No One make a bid against this Item.!</strong></p>
+                                {% endif %}
+                                <a href="{% url 'item_detail_page' item_code=item.id %}" class="btn btn-primary"
+                                   role="button">View Details</a>
+                            {% endif %}
+
                         </div>
                     </div>
                 </div>

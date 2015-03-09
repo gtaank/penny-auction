@@ -1,3 +1,4 @@
+from datetime import datetime
 from pennyauction.libs.renderers import BaseRenderer
 
 
@@ -16,6 +17,11 @@ class ItemRenderer(BaseRenderer):
     def min_available_bid(self):
         base_price = self.latest_bid.bid_price if self.latest_bid else self._item.base_price
         return base_price + self._item.price_difference_in_bids
+
+    @property
+    def auction_ended(self):
+        now = datetime.now()
+        return True if (self._item.auction_end_period and self._item.auction_end_period < now) else False
 
     @property
     def is_active(self):

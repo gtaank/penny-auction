@@ -43,6 +43,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'south',
     'djcelery',
+    'djkombu',
     'web',
     'web.users',
     'web.auctions',
@@ -100,7 +101,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
@@ -121,11 +122,13 @@ CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
 CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
 
 CELERYBEAT_SCHEDULE = {
-    'process-bids-after-every-five-minutes': {
+    'process-bids': {
         'task': 'process_bids',
         'schedule': crontab(minute='*/1'),
     },
 }
-
+# BROKER_URL = 'django://'
+BROKER_URL = 'django://guest:guest@localhost:5672/'
+CELERY_ALWAYS_EAGER = True
 # See: http://celery.github.com/celery/django/
 djcelery.setup_loader()

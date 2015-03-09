@@ -5,6 +5,7 @@ from django.core.management import call_command
 from django.core.management.base import NoArgsCommand
 
 from web.auctions.models import Item, Category
+from web.auctions.tasks import process_bids
 
 
 User = get_user_model()
@@ -17,6 +18,8 @@ class Command(NoArgsCommand):
         self.stdout.write('%s %s %s' % ((is_title and '#' or '>') * 20, message, (is_title and '#' or '<') * 20))
 
     def handle_noargs(self, **options):
+        process_bids()
+        return
         dev_null = open(os.devnull, 'w')
         self.stdout.write('~~ Inserting Test Data for Penny Auction ~~')
         self.stdout.write('Updating Migrations.')
@@ -26,7 +29,7 @@ class Command(NoArgsCommand):
         call_command('migrate', fake=True, stdout=dev_null, verbosity=0)
 
 
-        user = User.objects.create_superuser(email='verdan.mahmood@gmail.com', password='123456')
+        user = User.objects.create_superuser(email='admin@gmail.com', password='123456')
         user_1 = User.objects.create_user(email='testuser+1@gmail.com', password='123456')
         user_1.first_name = 'User1'
         user_1.save()

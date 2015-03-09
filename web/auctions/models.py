@@ -1,5 +1,5 @@
+from datetime import datetime
 from django.contrib.auth import get_user_model
-from django.utils import timezone
 from django.utils.text import slugify
 
 __author__ = 'verdan'
@@ -45,7 +45,7 @@ class Item(models.Model):
     shipping_charges = models.FloatField(default=0.00)
     price_difference_in_bids = models.FloatField(default=0.01)
 
-    auction_start_period = models.DateTimeField(default=timezone.now)
+    auction_start_period = models.DateTimeField(default=datetime.now)
     auction_end_period = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
@@ -63,8 +63,8 @@ class Item(models.Model):
 
     @staticmethod
     def get_items_needed_to_process():
-        now = timezone.now()
-        return Item.objects.filter(is_active=True, auction_end_period__lt=now)
+        now = datetime.now()
+        return Item.objects.filter(is_active=True, auction_end_period__lte=now)
 
 
 class Bid(models.Model):

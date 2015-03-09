@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+from datetime import datetime
 
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.core.mail import send_mail
 from django.db import models
 from django.utils.http import urlquote
 from django.utils.translation import ugettext_lazy as _
-from django.utils import timezone
 
 GENDER_CHOICES = (
     ('U', 'Unknown'),
@@ -61,7 +61,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     born_on = models.DateTimeField(null=True, blank=True,
                                    help_text=_('Timestamp of the Spotter Birthday.'))
 
-    date_joined = models.DateTimeField(_('date joined'), default=timezone.now,
+    date_joined = models.DateTimeField(_('date joined'), default=datetime.now,
                                        help_text=_('Designates when the user joined the SpotsTrek.'))
 
     lives_at = models.OneToOneField('Address', on_delete=models.SET_NULL, blank=True, null=True)

@@ -23,7 +23,8 @@
 
                         <p class="small"><strong>Category:</strong> {{ item.belongs_to.title }}</p>
 
-                    {% if item.is_active %}
+                    {% if not item.auction_ended %}
+
                         {% if item.auction_end_period %}
                             <p class="small"><strong>Auction Ends at:</strong> {{ item.auction_end_period }}</p>
                         {% else %}
@@ -37,11 +38,22 @@
                         {% endif %}
 
                         {% include 'web/_base_form.html' with form=form submit_button_text='Bid Now !' %}
+
                     {% else %}
-                        <p class="small">This Item has been awarded to {{ item.winner.made_by.first_name }}</p>
-                        <p>Awarded on {{ item.winner.awarded_on }}</p>
-                        <p><strong>On Price {{ item.winner.bid_price }} BTC</strong></p>
+                        {% if item.bids %}
+                            {% if item.winner %}
+                                <p class="small">This Item has been awarded to {{ item.winner.made_by.first_name }}</p>
+                                <p>Awarded on {{ item.winner.awarded_on }}</p>
+                                <p><strong>On Price {{ item.winner.bid_price }} BTC</strong></p>
+                             {% else %}
+                                <p><strong>Winners are being processed. It may take few minutes to award the bid, stay tuned!</strong></p>
+                            {% endif %}
+                        {% else %}
+                            <p><strong>No One make a bid against this Item.!</strong></p>
+                        {% endif %}
                     {% endif %}
+
+
                     </div>
                 </div>
 
