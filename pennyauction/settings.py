@@ -9,7 +9,10 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+from __future__ import absolute_import
+
 import os
+
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -39,6 +42,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'south',
+    'djcelery',
     'web',
     'web.users',
     'web.auctions',
@@ -107,3 +111,21 @@ STATIC_URL = '/static/'
 TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'web/templates'),
 )
+
+
+
+from celery.schedules import crontab
+import djcelery
+
+CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
+CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
+
+CELERYBEAT_SCHEDULE = {
+    'process-bids-after-every-five-minutes': {
+        'task': 'process_bids',
+        'schedule': crontab(minute='*/1'),
+    },
+}
+
+# See: http://celery.github.com/celery/django/
+djcelery.setup_loader()

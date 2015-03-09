@@ -2,3 +2,5 @@ pip==1.4
 django==1.6.5
 south==1.0.1
 django-grappelli==2.5.6
+celery==3.1.15
+django-celery==3.1.15

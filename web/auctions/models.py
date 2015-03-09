@@ -61,6 +61,11 @@ class Item(models.Model):
         if item:
             return item[0]
 
+    @staticmethod
+    def get_items_needed_to_process():
+        now = timezone.now()
+        return Item.objects.filter(is_active=True, auction_end_period__lt=now)
+
 
 class Bid(models.Model):
     made_by = models.ForeignKey(User, related_name='bids')
